@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+ 
 
 generator client {
   provider = "prisma-client-js"
@@ -12,4 +8,103 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+
+
+model Products{
+  id_producto                 String @id
+  price                       Float
+  description                 String
+  category                     String
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+  //realation with Orders
+  id_order       String?
+  order         Orders?   @relation(fields: [id_order], references: [id_order])
+  //realation with User admin
+  dni_user       String?
+  user         Users?   @relation(fields: [dni_user], references: [dni_user])
+}
+
+model Orders{
+  id_order                   String @id
+  dni_customer                 String
+  status                       Status     @default(PENDING)
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+  // a Order  N Products
+  products      Products[]
+   //realation with customers
+  customer         Customers?   @relation(fields: [dni_customer], references: [dni_customer])
+
+} 
+
+model Customers {
+   dni_customer                 String    @id
+   name                         String 
+   lastname                     String
+   password                     String
+   email                        String
+   birthdate                    DateTime
+   address                      String
+   number_phone                 String
+   createdAt                    DateTime @default(now())
+   updatedAt                    DateTime @updatedAt
+
+  // a Customers have N Orders
+  orders      Orders[]
+
+  //  1:1 with PaymentMethod
+  paymentMethod    PaymentMethod?
+
+}
+
+model PaymentMethod{
+  id_payment_method            String @id
+  card_number                 String
+  expiration_date             DateTime
+  customer_full_name          String
+  typeCard                    String
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt 
+  // relación 1:1 con Customer
+  customerId          String   @unique
+  customer            Customers @relation(fields: [customerId], references: [dni_customer])
+
+}
+
+
+model Users{
+   dni_user                     String @id
+   name                         String 
+   lastname                     String
+   password                     String
+   email                        String
+   birthdate                    DateTime
+   address                      String
+   number_phone                 String
+  role    Role                  @default(USER)
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+   // a User  N Products
+  products      Products[]
+}
+
+
+
+// PROCESSING: (Procesando): La orden está siendo preparada.
+// SHIPPED: (Enviado): La orden en camino.
+// DELIVERED: (Entregado): La orden ha llegado a su destino.
+// CANCELLED: (Cancelado): La orden fue anulada.
+enum Status {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+ 
+enum Role {
+  USER
+  ADMIN
 }
