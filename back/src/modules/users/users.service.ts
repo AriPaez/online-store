@@ -1,10 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { RegisterUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
-export class UsersService {
-  create(registerUserDto: RegisterUserDto) {
+export class UsersService extends PrismaClient implements OnModuleInit {
+  onModuleInit() {
+    this.$connect();
+    this.logger.log('Postgres connected');
+  }
+
+  async registerUser(registerUserDto: RegisterUserDto) {
     return 'This action adds a new user';
   }
 
