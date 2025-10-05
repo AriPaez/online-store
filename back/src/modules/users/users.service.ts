@@ -9,9 +9,8 @@ import { LoginDto, RegisterUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserEntity } from './entities/user.entity';
+import { JwtService } from '../common/jwt/jwt.service';
 @Injectable()
 export class UsersService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('UsersService');
@@ -22,10 +21,6 @@ export class UsersService extends PrismaClient implements OnModuleInit {
   }
   constructor(private readonly jwtService: JwtService) {
     super();
-  }
-
-  async signJWT(payload: JwtPayload) {
-    return this.jwtService.sign(payload);
   }
 
   async registerUser(registerUserDto: RegisterUserDto) {
@@ -122,7 +117,7 @@ export class UsersService extends PrismaClient implements OnModuleInit {
     } = newUser;
     return {
       user: rest,
-      token: await this.signJWT(rest),
+      token: await this.jwtService.signJWT(rest),
     };
   }
 
@@ -169,7 +164,7 @@ export class UsersService extends PrismaClient implements OnModuleInit {
     } = user;
     return {
       user: rest,
-      token: await this.signJWT(rest),
+      token: await this.jwtService.signJWT(rest),
     };
   }
 
