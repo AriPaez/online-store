@@ -75,14 +75,15 @@ model PaymentMethod{
 
 
 model Users{
-   dni_user                     String @id
+   dni_user                     String @id 
    name                         String 
    lastname                     String
+   username                   String @unique
    password                     String
-   email                        String
+   email                        String @unique
    birthdate                    DateTime
    address                      String
-   number_phone                 String
+   number_phone                 String  
   role    Role                  @default(USER)
   createdAt                    DateTime @default(now())
   updatedAt                    DateTime @updatedAt
