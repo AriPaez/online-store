@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+:root {
+  /* Tema Dark Violeta (por defecto) */
+  --background: #09090d;
+  --foreground: #f2f2f7;
+
+  /* Paleta base */
+  --fd-color-bg: #09090d;
+  /* fondo principal */
+  --fd-color-bg-alt: #11111a;
+  /* secciones */
+  --fd-color-surface: #161625;
+  /* tarjetas */
+  --fd-color-surface-alt: #1e1e2e;
+  /* hover surface */
+  --fd-color-border: #292938;
+  /* borde sutil */
+  --fd-color-border-strong: #3a3a4b;
+  --fd-color-text: #f2f2f7;
+  --fd-color-text-muted: #9b9bb2;
+  --fd-color-text-inverted: #09090d;
+
+  /* Acentos */
+  --fd-color-primary: #7c3aed;
+  /* violeta principal */
+  --fd-color-primary-foreground: #ffffff;
+  --fd-color-secondary: #a855f7;
+  /* violeta claro */
+  --fd-color-success: #10b981;
+  --fd-color-warning: #fb923c;
+  --fd-color-danger: #ef4444;
+  --fd-color-focus: #8b5cf6;
+
+  /* Gradientes accent */
+  --fd-gradient-hero: linear-gradient(135deg, #7c3aed 0%, #9333ea 40%, #c084fc 75%, #ec4899 100%);
+  --fd-color-success: #16a34a;
+  --fd-color-warning: #d97706;
+  --fd-color-danger: #dc2626;
+  --fd-color-focus: #2563eb;
+
+  /* Tipografía */
+  --fd-font-size-xs: 0.75rem;
+  --fd-font-size-sm: 0.875rem;
+  --fd-font-size-base: 1rem;
+  --fd-font-size-lg: 1.125rem;
+  --fd-font-size-xl: 1.25rem;
+  --fd-font-size-2xl: clamp(1.5rem, 2vw, 1.75rem);
+  --fd-font-size-3xl: clamp(1.75rem, 3vw, 2.25rem);
+  --fd-font-size-4xl: clamp(2rem, 4vw, 2.75rem);
+  --fd-font-size-5xl: clamp(2.5rem, 5vw, 3.5rem);
+  --fd-leading-default: 1.5;
+
+  /* Espaciados semánticos */
+  --fd-space-xs: 4px;
+  --fd-space-sm: 8px;
+  --fd-space-md: 16px;
+  --fd-space-lg: 24px;
+  --fd-space-xl: 32px;
+  --fd-space-2xl: 48px;
+
+  /* Radios */
+  --fd-radius-xs: 2px;
+  --fd-radius-sm: 4px;
+  --fd-radius-md: 6px;
+  --fd-radius-lg: 10px;
+  --fd-radius-full: 9999px;
+
+  /* Sombras */
+  --fd-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --fd-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.10), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+  --fd-shadow-lg: 0 8px 24px -4px rgba(0, 0, 0, 0.18);
+  --fd-shadow-glow: 0 0 0 4px color-mix(in srgb, var(--fd-color-primary) 40%, transparent);
+
+  /* Transiciones */
+  --fd-transition-fast: 120ms;
+  --fd-transition: 180ms;
+  --fd-transition-slow: 320ms;
+  --fd-ease: cubic-bezier(.4, 0, .2, 1);
+
+  /* Layout */
+  --fd-container-xs: 480px;
+  --fd-container-sm: 640px;
+  --fd-container-md: 768px;
+  --fd-container-lg: 1024px;
+  --fd-container-xl: 1280px;
+  --fd-container-2xl: 1440px;
+
+  /* Z Index */
+  --fd-z-base: 0;
+  --fd-z-dropdown: 100;
+  --fd-z-sticky: 200;
+  --fd-z-overlay: 400;
+  --fd-z-modal: 500;
+  --fd-z-popover: 600;
+  --fd-z-toast: 700;
+
+  /* Gradientes */
+  --fd-gradient-hero: linear-gradient(135deg, #ff4d2d 0%, #ff805e 50%, #ffb199 100%);
+}
+
+/* Variables mapeadas (compatibilidad con clases Tailwind generadas por template) */
+/* Eliminado @theme inline por incompatibilidad; conservamos equivalencias */
+/* :root ya define colores; aquí mantenemos alias si son usados en algún sitio */
+/* (Podrían eliminarse si no se usan) */
+/* --color-background / foreground se mantienen como legacy en :root */
+
+/* Dark mode automático (prefers-color-scheme) */
+/* Modo claro opcional (si se añade class .theme-light en <html>) */
+.theme-light {
+  --background: #ffffff;
+  --foreground: #171717;
+  --fd-color-bg: #ffffff;
+  --fd-color-bg-alt: #f7f7f8;
+  --fd-color-surface: #ffffff;
+  --fd-color-surface-alt: #f2f3f5;
+  --fd-color-border: #e3e5e8;
+  --fd-color-border-strong: #c5c9ce;
+  --fd-color-text: #181a1f;
+  --fd-color-text-muted: #5a616b;
+  --fd-color-text-inverted: #ffffff;
+  --fd-color-primary: #7c3aed;
+  --fd-color-primary-foreground: #ffffff;
+  --fd-color-secondary: #a855f7;
+  --fd-color-success: #16a34a;
+  --fd-color-warning: #d97706;
+  --fd-color-danger: #dc2626;
+  --fd-color-focus: #7c3aed;
+  --fd-gradient-hero: linear-gradient(135deg, #7c3aed 0%, #9333ea 40%, #c084fc 75%, #ec4899 100%);
+}
+
+body {
+  background: var(--fd-color-bg);
+  color: var(--fd-color-text);
+  font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Utilidades mínimas adicionales */
+.fd-container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  max-width: var(--fd-container-xl);
+}
+
+.fd-focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--fd-color-focus);
+}
+
+/* Scrollbar estilizada (opcional) */
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--fd-color-bg-alt);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--fd-color-border);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--fd-color-border-strong);
+}
+
+/* -------------------------------------------------- */
+/* Tailwind Custom Utilities (@layer)                 */
+/* -------------------------------------------------- */
+/* Utilidades sin @apply (compatibles con pipeline actual) */
+.text-gradient {
+  background: var(--fd-gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.announcement-bar {
+  position: sticky;
+  top: 0;
+  height: 2rem; /* h-8 */
+  overflow: hidden;
+  border-bottom: 1px solid var(--fd-color-border);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.075em; /* tracking-wide approx */
+  font-weight: 500;
+  background: color-mix(in srgb, var(--fd-color-bg-alt) 95%, transparent);
+  z-index: calc(var(--fd-z-sticky) + 5);
+}
+.card-surface {
+  background: var(--fd-color-surface);
+  border: 1px solid var(--fd-color-border);
+  border-radius: var(--fd-radius-md);
+  box-shadow: var(--fd-shadow-sm);
+}
