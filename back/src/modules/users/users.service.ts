@@ -11,6 +11,7 @@ import { PrismaClient, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { UserEntity } from './entities/user.entity';
 @Injectable()
 export class UsersService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('UsersService');
@@ -89,7 +90,7 @@ export class UsersService extends PrismaClient implements OnModuleInit {
       );
     }
 
-    const newUser = await this.users.create({
+    const newUser: UserEntity = await this.users.create({
       data: {
         dni_user,
         name,
