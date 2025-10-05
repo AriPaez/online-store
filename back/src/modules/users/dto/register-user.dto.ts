@@ -1,16 +1,24 @@
-import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
+import { IsString, IsStrongPassword } from 'class-validator';
 
 export class RegisterUserDto {
   @IsString()
+  dni_user: string;
+  @IsString()
   name: string;
   @IsString()
-  lastName: string;
+  lastname: string;
   @IsString()
   username: string;
-  @IsString()
-  @IsEmail()
-  email: string;
-  @IsString()
   @IsStrongPassword()
   password: string;
+  @IsString()
+  email: string;
+  @IsString()
+  birthdate: string;
+  @IsString()
+  address: string;
+  @IsString()
+  number_phone: string;
+  @IsString()
+  role: string;
 }
