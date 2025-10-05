@@ -9,6 +9,8 @@ import { RegisterUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 @Injectable()
 export class UsersService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('UsersService');
@@ -16,6 +18,13 @@ export class UsersService extends PrismaClient implements OnModuleInit {
   onModuleInit() {
     this.$connect();
     this.logger.log('Postgres connected');
+  }
+  constructor(private readonly jwtService: JwtService) {
+    super();
+  }
+
+  async signJWT(payload: JwtPayload) {
+    return this.jwtService.sign(payload);
   }
 
   async registerUser(registerUserDto: RegisterUserDto) {
@@ -95,10 +104,24 @@ export class UsersService extends PrismaClient implements OnModuleInit {
       },
     });
 
-    const { password: __, ...rest } = newUser;
-
+    //   / id: string;
+    // email: string;
+    // name: string;
+    const {
+      lastname: _lastname,
+      username: _username,
+      birthdate: _birthdate,
+      address: _address,
+      number_phone: _phone,
+      role: _role,
+      password: _password,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
+      ...rest
+    } = newUser;
     return {
       user: rest,
+      token: await this.signJWT(rest),
     };
   }
 
