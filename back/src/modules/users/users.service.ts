@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { RegisterUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 
 @Injectable()
 export class UsersService extends PrismaClient implements OnModuleInit {
@@ -91,7 +91,7 @@ export class UsersService extends PrismaClient implements OnModuleInit {
         birthdate,
         address,
         number_phone,
-        [role]: role,
+        role: Role[role],
       },
     });
 
