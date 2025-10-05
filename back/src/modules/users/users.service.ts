@@ -5,7 +5,7 @@ import {
   Logger,
   OnModuleInit,
 } from '@nestjs/common';
-import { RegisterUserDto } from './dto';
+import { LoginDto, RegisterUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -120,6 +120,53 @@ export class UsersService extends PrismaClient implements OnModuleInit {
       updatedAt: _updatedAt,
       ...rest
     } = newUser;
+    return {
+      user: rest,
+      token: await this.signJWT(rest),
+    };
+  }
+
+  async loginUser(loginUserDto: LoginDto) {
+    const { username, password } = loginUserDto;
+
+    const user: UserEntity = await this.users.findUnique({
+      where: { username },
+    });
+
+    if (!user) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          message: 'User/Password not valid',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          message: 'User/Password not valid',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const {
+      lastname: _lastname,
+      username: _username,
+      birthdate: _birthdate,
+      address: _address,
+      number_phone: _phone,
+      role: _role,
+      password: _password,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
+      ...rest
+    } = user;
     return {
       user: rest,
       token: await this.signJWT(rest),
