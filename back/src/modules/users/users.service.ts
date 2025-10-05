@@ -8,7 +8,7 @@ import {
 import { RegisterUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient, Role } from '@prisma/client';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('UsersService');
@@ -86,7 +86,7 @@ export class UsersService extends PrismaClient implements OnModuleInit {
         name,
         lastname,
         username,
-        password,
+        password: bcrypt.hashSync(password, 10),
         email,
         birthdate,
         address,
