@@ -11,6 +11,7 @@ import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomerEntity } from './entities/customer.entity';
 import { JwtService } from '../common/jwt/jwt.service';
 import * as bcrypt from 'bcrypt';
+import { LoginDto } from '../users/dto';
 @Injectable()
 export class CustomersService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('CustomersService');
@@ -107,6 +108,52 @@ export class CustomersService extends PrismaClient implements OnModuleInit {
       updatedAt: _updatedAt,
       ...rest
     } = newCustomer;
+    return {
+      user: rest,
+      token: await this.jwtService.signJWT(rest),
+    };
+  }
+
+  async loginCustomer(loginUserDto: LoginDto) {
+    const { username, password } = loginUserDto;
+
+    const customer: CustomerEntity = await this.customers.findUnique({
+      where: { username },
+    });
+
+    if (!customer) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          message: 'customer/Password not valid',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const isPasswordValid = bcrypt.compareSync(password, customer.password);
+
+    if (!isPasswordValid) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          message: 'customer/Password not valid',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const {
+      lastname: _lastname,
+      username: _username,
+      birthdate: _birthdate,
+      address: _address,
+      number_phone: _phone,
+      password: _password,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
+      ...rest
+    } = customer;
     return {
       user: rest,
       token: await this.jwtService.signJWT(rest),
