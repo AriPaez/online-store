@@ -43,8 +43,9 @@ model Customers {
    dni_customer                 String    @id
    name                         String 
    lastname                     String
+   username                 String @unique
    password                     String
-   email                        String
+   email                        String    @unique
    birthdate                    DateTime
    address                      String
    number_phone                 String
