@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
 import { envs } from 'src/config';
-import { JwtPayload } from 'src/modules/users/interfaces/jwt-payload.interface';
+import { JwtPayloadCustomer } from 'src/modules/customers/interfaces/jwt-payload.interface';
+import { JwtPayloadUser } from 'src/modules/users/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class JwtService {
   constructor(private readonly jwtService: NestJwtService) {}
 
-  async signJWT(payload: JwtPayload) {
+  async signJWT(payload: JwtPayloadUser | JwtPayloadCustomer) {
     return this.jwtService.sign(payload);
   }
 
