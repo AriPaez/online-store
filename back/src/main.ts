@@ -7,8 +7,6 @@ async function bootstrap() {
   const logger = new Logger('Online-Store');
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS for local development so the frontend can call the API
-  // In production, restrict this to your production domain.
   app.enableCors({
     origin: ['http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

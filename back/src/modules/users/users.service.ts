@@ -96,14 +96,7 @@ export class UsersService extends PrismaClient implements OnModuleInit {
         birthdate,
         address,
         number_phone,
-  // Prisma's generated client should accept the role as the enum name string.
-  // Avoid importing the Role enum type directly from @prisma/client to prevent
-  // TypeScript mismatch errors in some environments. Pass the role string
-  // (e.g. 'USER' or 'ADMIN') directly; fallback to 'USER' when not provided.
-  // Prisma accepts the enum name as a string at runtime. Use a simple
-  // any-cast to satisfy TypeScript and avoid importing the generated
-  // enum types which can vary across environments.
-  role: (role || 'USER') as any,
+        role: (role || 'USER') as any,
       },
     });
 
