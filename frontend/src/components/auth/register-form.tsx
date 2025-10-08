@@ -2,17 +2,13 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-// react-datepicker CSS is loaded on-demand to avoid blocking initial render
+import "react-datepicker/dist/react-datepicker.css";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { postRegister } from "@/lib/api";
 import DatePicker from "react-datepicker";
+import zxcvbn from "zxcvbn";
 import { format, parse, isValid } from "date-fns";
-
-type ZxcvbnResult = {
-  score: number;
-  feedback?: { warning?: string; suggestions?: string[] };
-};
 
 export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
   const [form, setForm] = useState({
@@ -38,8 +34,6 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
   const [popupPos, setPopupPos] = useState<{ x: number; y: number } | null>(
     null
   );
-  const [zxcvbnFn, setZxcvbnFn] = useState<((s: string) => ZxcvbnResult) | null>(null);
-  const [datepickerCssLoaded, setDatepickerCssLoaded] = useState(false);
 
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
@@ -51,21 +45,6 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
     if (datePickerOpen) document.addEventListener("click", onDocClick);
     return () => document.removeEventListener("click", onDocClick);
   }, [datePickerOpen]);
-
-  function ensureDatepickerCss() {
-    if (typeof document === "undefined" || datepickerCssLoaded) return;
-    if (document.getElementById("react-datepicker-css")) {
-      setDatepickerCssLoaded(true);
-      return;
-    }
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    // CDN copy so CSS isn't part of initial critical CSS
-    link.href = "https://unpkg.com/react-datepicker/dist/react-datepicker.css";
-    link.id = "react-datepicker-css";
-    link.onload = () => setDatepickerCssLoaded(true);
-    document.head.appendChild(link);
-  }
 
   function update(field: string, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -81,23 +60,8 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
     if (!form.username) e.username = "Usuario requerido";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       e.email = "Email inválido";
-    // Use zxcvbn if already loaded, otherwise a length heuristic
-    if (zxcvbnFn) {
-      try {
-        const r = zxcvbnFn(form.password || "");
-        if (r && typeof r === "object") {
-          const score = (r as Record<string, unknown>)["score"];
-          if (typeof score === "number" && score < 3)
-            e.password = "La contraseña debe ser más fuerte";
-        }
-      } catch {
-        if ((form.password || "").length < 8)
-          e.password = "La contraseña debe ser más fuerte";
-      }
-    } else {
-      if ((form.password || "").length < 8)
-        e.password = "La contraseña debe ser más fuerte";
-    }
+    const pw = zxcvbn(form.password || "");
+    if (pw.score < 3) e.password = "La contraseña debe ser más fuerte";
     if (!birthDateObj) e.birthdate = "Fecha de nacimiento requerida";
     else {
       // precise age check
@@ -206,40 +170,12 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
         type="password"
         value={form.password}
         onChange={(e) => {
-          const v = e.target.value;
-          update("password", v);
-          // optimistic quick heuristic
-          const quick = v.length >= 12 ? 4 : v.length >= 10 ? 3 : v.length >= 8 ? 2 : v.length >= 6 ? 1 : 0;
-          setPwScore(quick);
-          setPwFeedback(null);
-          if (!zxcvbnFn) {
-            import('zxcvbn')
-              .then((m) => {
-                const fn = ((m as unknown) as { default?: unknown })?.default || (m as unknown);
-                if (typeof fn === 'function') {
-                  const typedFn = fn as (s: string) => ZxcvbnResult;
-                  setZxcvbnFn(() => typedFn);
-                  try {
-                    const r = typedFn(v || '');
-                    if (r && typeof r === 'object') {
-                      setPwScore((r as ZxcvbnResult).score);
-                      setPwFeedback((r as ZxcvbnResult).feedback?.warning || (r as ZxcvbnResult).feedback?.suggestions?.[0] || null);
-                    }
-                  } catch {
-                    // ignore
-                  }
-                }
-              })
-              .catch(() => {});
-          } else {
-            try {
-              const r = zxcvbnFn(v || '');
-              setPwScore(r.score);
-              setPwFeedback(r.feedback?.warning || r.feedback?.suggestions?.[0] || null);
-            } catch {
-              // ignore
-            }
-          }
+          update("password", e.target.value);
+          const r = zxcvbn(e.target.value || "");
+          setPwScore(r.score);
+          setPwFeedback(
+            r.feedback?.warning || r.feedback?.suggestions?.[0] || null
+          );
         }}
         className="input"
       />
@@ -287,7 +223,7 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
               setBirthDateObj(null);
             }
           }}
-          onFocus={() => { ensureDatepickerCss(); setDatePickerOpen(true); }}
+          onFocus={() => setDatePickerOpen(true)}
           aria-label="Fecha de nacimiento"
         />
         <button
@@ -296,7 +232,6 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
           className="p-2 rounded bg-[var(--fd-color-surface-alt)] hover:bg-[var(--fd-color-surface)]"
           onClick={(e: React.MouseEvent) => {
             const ev = e as React.MouseEvent;
-            ensureDatepickerCss();
             setPopupPos({ x: ev.clientX, y: ev.clientY });
             setDatePickerOpen((s) => !s);
           }}
