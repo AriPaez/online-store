@@ -7,6 +7,15 @@ async function bootstrap() {
   const logger = new Logger('Online-Store');
   const app = await NestFactory.create(AppModule);
 
+  // Enable CORS for local development so the frontend can call the API
+  // In production, restrict this to your production domain.
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+    credentials: true,
+  });
+
   app.setGlobalPrefix('api/v1/');
   app.useGlobalPipes(
     new ValidationPipe({

@@ -5,7 +5,9 @@ import { IconButton } from "@/components/ui/icon-button";
 import { Container } from "@/components/ui/container";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthProvider";
 import { BrandMark } from "@/components/layout/brand-mark";
+import AuthModal from '@/components/auth/auth-modal';
 
 // Simple placeholder icons (SVG inline). Reemplazar por íconos reales luego.
 function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -87,6 +89,15 @@ function CloseIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+function LogoutIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  );
+}
 
 interface HeaderProps {
   className?: string;
@@ -101,6 +112,8 @@ const NAV_LINKS = [
 
 export function Header({ className }: HeaderProps) {
   const [open, setOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   return (
     <header className={cn("sticky top-8 z-[var(--fd-z-sticky)]", className)}>
@@ -135,12 +148,23 @@ export function Header({ className }: HeaderProps) {
             >
               <SearchIcon className="h-5 w-5" />
             </IconButton>
-            <IconButton
-              label="Cuenta"
-              className="hover:bg-[var(--fd-color-surface-alt)]"
-            >
-              <UserIcon className="h-5 w-5" />
-            </IconButton>
+            {user ? (
+              <div className="flex items-center gap-2">
+                <Link href="/profile" className="text-sm underline">{user.name || user.email || 'Cuenta'}</Link>
+                <IconButton label="Cerrar sesión" onClick={() => { logout(); window.location.href = '/'; }} className="hover:bg-[var(--fd-color-surface-alt)]">
+                  <LogoutIcon className="h-5 w-5" />
+                </IconButton>
+              </div>
+            ) : (
+              <div role="button" tabIndex={0} onClick={() => setAuthOpen(true)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setAuthOpen(true); }}>
+                <IconButton
+                  label="Cuenta"
+                  className="hover:bg-[var(--fd-color-surface-alt)]"
+                >
+                  <UserIcon className="h-5 w-5" />
+                </IconButton>
+              </div>
+            )}
             <IconButton
               label="Carrito"
               variant="outline"
@@ -161,6 +185,17 @@ export function Header({ className }: HeaderProps) {
             <IconButton label="Buscar">
               <SearchIcon className="h-5 w-5" />
             </IconButton>
+              {user ? (
+                <IconButton label="Cerrar sesión" onClick={() => { logout(); window.location.href = '/'; }} className="ml-2 hover:bg-[var(--fd-color-surface-alt)]">
+                  <LogoutIcon className="h-5 w-5" />
+                </IconButton>
+              ) : (
+                <div role="button" tabIndex={0} onClick={() => setAuthOpen(true)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setAuthOpen(true); }} className="ml-2">
+                  <IconButton label="Cuenta" className="hover:bg-[var(--fd-color-surface-alt)]">
+                    <UserIcon className="h-5 w-5" />
+                  </IconButton>
+                </div>
+              )}
             <IconButton
               label="Carrito"
               variant="outline"
@@ -211,6 +246,7 @@ export function Header({ className }: HeaderProps) {
           </div>
         </div>
       )}
+      {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
     </header>
   );
 }

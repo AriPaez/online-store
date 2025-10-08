@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthProvider";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 
@@ -50,16 +51,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AnnouncementBar
-          messages={[
-            "ENVÍOS A TODO EL PAÍS",
-            "3 Y 6 CUOTAS SIN INTERÉS",
-            "DEVOLUCIONES SIMPLIFICADAS",
-            "CUIDEN A NICO, GENTE",
-          ]}
-        />
-        {children}
-        <WhatsAppButton />
+        <AuthProvider>
+          <AnnouncementBar
+            messages={[
+              "ENVÍOS A TODO EL PAÍS",
+              "3 Y 6 CUOTAS SIN INTERÉS",
+              "DEVOLUCIONES SIMPLIFICADAS",
+              "CUIDEN A NICO, GENTE",
+            ]}
+          />
+          {children}
+          <WhatsAppButton />
+        </AuthProvider>
       </body>
     </html>
   );

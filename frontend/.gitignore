@@ -1,0 +1,110 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# ------------------------------------------------------------------
+# Additional ignores (añadidos)
+# ------------------------------------------------------------------
+
+# Caches / Herramientas
+.eslintcache
+.stylelintcache
+.turbo/
+.swc/
+.vitest/
+.nyc_output/
+.jest-cache/
+.jest-test-sequencer-order.json
+coverage-final.json
+
+# Playwright / Cypress / Storybook
+playwright-report/
+test-results/
+blob-report/
+.playwright-cache/
+cypress/screenshots/
+cypress/videos/
+storybook-static/
+.storybook-out/
+
+# Editor / IDE
+.idea/
+.vscode/
+!.vscode/settings.example.json
+!.vscode/extensions.example.json
+
+# pnpm / npm extras
+.pnpm-store/
+.npm/
+
+# Temporal / builds alternos
+dist/
+tmp/
+temp/
+*.tgz
+
+# Logs adicionales
+*.log.old
+
+# Sistema / miscelánea
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*~
+.*.swp
+.*.swo
+
+# Auditoría / performance
+lighthouse/
+lighthouse-results/
+*.har
+*.trace
+*.pid
+*.pid.lock
+
+# Sentry (si se usa)
+.sentryclisession
+.sentrycli
+
+# lint-staged / husky cache
+lint-staged.cache
+.husky/_

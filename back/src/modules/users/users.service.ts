@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { LoginDto, RegisterUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { UserEntity } from './entities/user.entity';
 import { JwtService } from '../common/jwt/jwt.service';
@@ -96,7 +96,14 @@ export class UsersService extends PrismaClient implements OnModuleInit {
         birthdate,
         address,
         number_phone,
-        role: Role[role],
+  // Prisma's generated client should accept the role as the enum name string.
+  // Avoid importing the Role enum type directly from @prisma/client to prevent
+  // TypeScript mismatch errors in some environments. Pass the role string
+  // (e.g. 'USER' or 'ADMIN') directly; fallback to 'USER' when not provided.
+  // Prisma accepts the enum name as a string at runtime. Use a simple
+  // any-cast to satisfy TypeScript and avoid importing the generated
+  // enum types which can vary across environments.
+  role: (role || 'USER') as any,
       },
     });
 

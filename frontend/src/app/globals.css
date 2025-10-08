@@ -199,3 +199,59 @@ body {
   border-radius: var(--fd-radius-md);
   box-shadow: var(--fd-shadow-sm);
 }
+
+/* Form inputs used across the app */
+.input {
+  width: 100%;
+  display: block;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--fd-radius-sm);
+  background: var(--fd-color-surface-alt);
+  border: 1px solid var(--fd-color-border);
+  color: var(--fd-color-text);
+  transition: box-shadow var(--fd-transition), border-color var(--fd-transition);
+}
+.input:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-color-primary) 18%, transparent);
+  border-color: var(--fd-color-focus);
+  outline: none;
+}
+
+.form-note {
+  color: var(--fd-color-text-muted);
+  font-size: 0.875rem;
+}
+
+/* react-datepicker dark theme overrides */
+.react-datepicker {
+  background: var(--fd-color-surface);
+  color: var(--fd-color-text);
+  border: 1px solid var(--fd-color-border);
+  box-shadow: var(--fd-shadow-lg);
+}
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  color: var(--fd-color-text-muted);
+}
+.react-datepicker__day {
+  color: var(--fd-color-text);
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background: var(--fd-color-primary);
+  color: var(--fd-color-primary-foreground);
+}
+.react-datepicker__triangle {
+  display: none; /* avoid layout quirks */
+}
+
+/* Animated popper for datepicker */
+.fd-datepicker-popper {
+  animation: fdp-in 160ms ease-out;
+  transform-origin: top left;
+  z-index: calc(var(--fd-z-modal) + 50) !important;
+}
+@keyframes fdp-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
