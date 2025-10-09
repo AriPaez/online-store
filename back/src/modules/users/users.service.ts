@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { LoginDto, RegisterUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { UserEntity } from './entities/user.entity';
 import { JwtService } from '../common/jwt/jwt.service';
@@ -96,7 +96,7 @@ export class UsersService extends PrismaClient implements OnModuleInit {
         birthdate,
         address,
         number_phone,
-        role: (role || 'USER') as any,
+        role: Role[role],
       },
     });
 
