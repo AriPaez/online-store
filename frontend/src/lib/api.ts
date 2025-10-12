@@ -56,3 +56,21 @@ export async function postRegister(body: Record<string, any>) {
 export async function verifyToken(token: string) {
   return request('/api/v1/users/verify', { method: 'GET', headers: { Authorization: `Bearer ${token}` } });
 }
+
+// Products
+export async function getProducts() {
+  return request('/api/v1/products', { method: 'GET' });
+}
+
+export async function getProduct(id: string) {
+  return request(`/api/v1/products/${id}`, { method: 'GET' });
+}
+
+// Orders
+export async function createOrder(body: Record<string, any>) {
+  return request('/api/v1/orders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}

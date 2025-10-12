@@ -7,13 +7,17 @@ export const products: Product[] = [
     price: 100000,
     image: '/product-example.webp',
     badge: 'Nuevo',
-    variantCount: 3
+    description: 'Descripción de la Remera',
+    variantCount: 3,
+    category: 'Remera'
   },
   {
     id: 'test-product',
     name: 'TEST',
     price: 666,
+    description: "Descripción del Test",
     image: '/icon.webp',
-    variantCount: 2
-  },
+    variantCount: 2,
+    category: 'Accesorio'
+  }
 ];

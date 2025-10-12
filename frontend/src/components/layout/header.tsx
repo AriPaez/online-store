@@ -7,88 +7,53 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthProvider";
 import { BrandMark } from "@/components/layout/brand-mark";
-import AuthModal from '@/components/auth/auth-modal';
+import { useCart } from "@/context/CartContext";
+import AuthModal from "@/components/auth/auth-modal";
 
-// Simple placeholder icons (SVG inline). Reemplazar por íconos reales luego.
 function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
       <circle cx="11" cy="11" r="7" />
       <path d="m21 21-4.35-4.35" />
     </svg>
   );
 }
+
 function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M3 6h18M3 12h18M3 18h18" />
     </svg>
   );
 }
+
 function UserIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M18 20a6 6 0 0 0-12 0" />
       <circle cx="12" cy="10" r="4" />
     </svg>
   );
 }
+
 function BagIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M6 7h12l1 13H5L6 7Z" />
       <path d="M9 7V4h6v3" />
     </svg>
   );
 }
+
 function CloseIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M18 6 6 18" />
       <path d="m6 6 12 12" />
     </svg>
   );
 }
+
 function LogoutIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -111,9 +76,11 @@ const NAV_LINKS = [
 ];
 
 export function Header({ className }: HeaderProps) {
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { items, open, setOpen } = useCart();
+  const itemCount = items.reduce((s, it) => s + it.qty, 0);
 
   return (
     <header className={cn("sticky top-8 z-[var(--fd-z-sticky)]", className)}>
@@ -123,31 +90,26 @@ export function Header({ className }: HeaderProps) {
           {/* Brand Left */}
           <div className="flex items-center gap-3 min-w-[140px]">
             <BrandMark asLink priority size={36} withText={false} />
-            <span className="hidden xl:inline font-extrabold text-lg tracking-tight">
-              FoxDrip
-            </span>
+            <span className="hidden xl:inline font-extrabold text-lg tracking-tight">FoxDrip</span>
           </div>
+
           {/* Nav Center */}
           <ul className="flex flex-1 items-center justify-center gap-10 text-[12.5px] tracking-wider font-medium uppercase">
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="text-[var(--fd-color-text-muted)] hover:text-white transition-colors"
-                >
+                <Link href={l.href} className="text-[var(--fd-color-text-muted)] hover:text-white transition-colors">
                   {l.label}
                 </Link>
               </li>
             ))}
           </ul>
+
           {/* Actions Right */}
           <div className="flex items-center gap-2 min-w-[140px] justify-end">
-            <IconButton
-              label="Buscar"
-              className="hover:bg-[var(--fd-color-surface-alt)]"
-            >
+            <IconButton label="Buscar" className="hover:bg-[var(--fd-color-surface-alt)]">
               <SearchIcon className="h-5 w-5" />
             </IconButton>
+
             {user ? (
               <div className="flex items-center gap-2">
                 <Link href="/profile" className="text-sm underline">{user.name || user.email || 'Cuenta'}</Link>
@@ -157,26 +119,24 @@ export function Header({ className }: HeaderProps) {
               </div>
             ) : (
               <div role="button" tabIndex={0} onClick={() => setAuthOpen(true)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setAuthOpen(true); }}>
-                <IconButton
-                  label="Cuenta"
-                  className="hover:bg-[var(--fd-color-surface-alt)]"
-                >
+                <IconButton label="Cuenta" className="hover:bg-[var(--fd-color-surface-alt)]">
                   <UserIcon className="h-5 w-5" />
                 </IconButton>
               </div>
             )}
-            <IconButton
-              label="Carrito"
-              variant="outline"
-              className="border-[var(--fd-color-border)] hover:border-[var(--fd-color-primary)]"
-            >
-              <BagIcon className="h-5 w-5" />
-            </IconButton>
+
+            <div className="flex items-center gap-2">
+              <IconButton label="Carrito" variant="outline" className="border-[var(--fd-color-border)] hover:border-[var(--fd-color-primary)]" onClick={() => setOpen(!open)}>
+                <BagIcon className="h-5 w-5" />
+              </IconButton>
+              {itemCount > 0 && <div className="ml-1 text-sm font-medium">{itemCount}</div>}
+            </div>
           </div>
         </Container>
+
         {/* Mobile */}
         <Container className="flex md:hidden h-16 items-center justify-between">
-          <IconButton label="Abrir menú" onClick={() => setOpen(true)}>
+          <IconButton label="Abrir menú" onClick={() => setMenuOpen(true)}>
             <MenuIcon className="h-5 w-5" />
           </IconButton>
           <BrandMark asLink size={32} />
@@ -185,64 +145,52 @@ export function Header({ className }: HeaderProps) {
             <IconButton label="Buscar">
               <SearchIcon className="h-5 w-5" />
             </IconButton>
-              {user ? (
-                <IconButton label="Cerrar sesión" onClick={() => { logout(); window.location.href = '/'; }} className="ml-2 hover:bg-[var(--fd-color-surface-alt)]">
-                  <LogoutIcon className="h-5 w-5" />
+            {user ? (
+              <IconButton label="Cerrar sesión" onClick={() => { logout(); window.location.href = '/'; }} className="ml-2 hover:bg-[var(--fd-color-surface-alt)]">
+                <LogoutIcon className="h-5 w-5" />
+              </IconButton>
+            ) : (
+              <div role="button" tabIndex={0} onClick={() => setAuthOpen(true)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setAuthOpen(true); }} className="ml-2">
+                <IconButton label="Cuenta" className="hover:bg-[var(--fd-color-surface-alt)]">
+                  <UserIcon className="h-5 w-5" />
                 </IconButton>
-              ) : (
-                <div role="button" tabIndex={0} onClick={() => setAuthOpen(true)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setAuthOpen(true); }} className="ml-2">
-                  <IconButton label="Cuenta" className="hover:bg-[var(--fd-color-surface-alt)]">
-                    <UserIcon className="h-5 w-5" />
-                  </IconButton>
-                </div>
-              )}
-            <IconButton
-              label="Carrito"
-              variant="outline"
-              className="border-[var(--fd-color-border)] hover:border-[var(--fd-color-primary)]"
-            >
-              <BagIcon className="h-5 w-5" />
-            </IconButton>
+              </div>
+            )}
+
+            <div className="flex items-center gap-2">
+              <IconButton label="Carrito" variant="outline" className="border-[var(--fd-color-border)] hover:border-[var(--fd-color-primary)]" onClick={() => setOpen(!open)}>
+                <BagIcon className="h-5 w-5" />
+              </IconButton>
+              {itemCount > 0 && <div className="ml-1 text-sm font-medium">{itemCount}</div>}
+            </div>
           </div>
         </Container>
       </nav>
 
       {/* Mobile Overlay Menu */}
-      {open && (
+      {menuOpen && (
         <div className="fixed inset-0 z-[var(--fd-z-modal)] bg-black/80 backdrop-blur-sm flex flex-col">
           <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
-            <button
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2 font-bold text-lg"
-            >
+            <button onClick={() => setMenuOpen(false)} className="flex items-center gap-2 font-bold text-lg">
               <BrandMark size={32} />
               <span>FoxDrip</span>
             </button>
-            <IconButton label="Cerrar" onClick={() => setOpen(false)}>
+            <IconButton label="Cerrar" onClick={() => setMenuOpen(false)}>
               <CloseIcon className="h-5 w-5" />
             </IconButton>
           </div>
           <ul className="flex-1 flex flex-col gap-2 px-6 py-6 text-sm font-medium uppercase tracking-wide">
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
-                <Link
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="block w-full rounded-md px-3 py-3 text-[var(--fd-color-text-muted)] hover:text-white hover:bg-white/5 transition-colors"
-                >
+                <Link href={l.href} onClick={() => setMenuOpen(false)} className="block w-full rounded-md px-3 py-3 text-[var(--fd-color-text-muted)] hover:text-white hover:bg-white/5 transition-colors">
                   {l.label}
                 </Link>
               </li>
             ))}
           </ul>
           <div className="px-6 pb-8 flex flex-col gap-3 text-xs text-[var(--fd-color-text-muted)]">
-            <p className="leading-relaxed">
-              Indumentaria de edición limitada inspirada en la cultura urbana y
-              creatividad independiente.
-            </p>
-            <p className="text-[10px] tracking-wide uppercase">
-              © {new Date().getFullYear()} FoxDrip
-            </p>
+            <p className="leading-relaxed">Indumentaria de edición limitada inspirada en la cultura urbana y creatividad independiente.</p>
+            <p className="text-[10px] tracking-wide uppercase">© {new Date().getFullYear()} FoxDrip</p>
           </div>
         </div>
       )}
@@ -250,3 +198,4 @@ export function Header({ className }: HeaderProps) {
     </header>
   );
 }
+

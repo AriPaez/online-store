@@ -41,6 +41,7 @@ export function ProductImage({
         placeholder={blur ? 'blur' : undefined}
         blurDataURL={blur ? blurDataURL : undefined}
         sizes="(max-width:768px) 50vw, (max-width:1200px) 25vw, 300px"
+        loading="lazy" 
         {...rest}
       />
     </div>
