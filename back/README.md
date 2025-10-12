@@ -30,6 +30,11 @@
 
 ```bash
 $ npm install
+$ npm install @prisma/client @nestjs/jwt bcrypt
+$ npm install prisma -D
+$ npx prisma generate schema.prisma
+$ docker compose -f docker-compose-dev.yml up 
+$ npx prisma migrate -- dev schema.prisma
 ```
 
 ## Running the app
