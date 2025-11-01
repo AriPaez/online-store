@@ -87,7 +87,7 @@ export class ProductsService{
   async valorTotalInventario(){
       const productos = await this.prisma.products.findMany();
       const sumaInventario = productos.reduce((acc, prod)=>acc + prod.price* prod.stock,0)
-      return sumaInventario;
+      return  sumaInventario;
   }
 
   //ESTO PARA EL USUARIO DEFAULT, OSEA EL CLIENTE

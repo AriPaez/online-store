@@ -29,19 +29,19 @@ export class ProductsController {
   async create(@Body() createProductDto: CreateProductDto) {
     const existe = await this.productsService.findOne(createProductDto.id_producto)
     if(existe) throw new ConflictException('Ya existe el producto') 
-    return this.productsService.create(createProductDto);
+    return await this.productsService.create(createProductDto);
   }
 
   @Get()
   async findAll() {
-    return this.productsService.findAll();
+    return await this.productsService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const productoEncontrado = await this.productsService.findOne(id)
     if(!productoEncontrado) throw new NotFoundException('No existe el producto') 
-    return productoEncontrado;
+    return  productoEncontrado;
   }
 
   @Patch(':id')
@@ -72,7 +72,7 @@ export class ProductsController {
         throw new ForbiddenException('Solo los administradores pueden agregar descuento')
       }
 
-      return this.productsService.aplicarDescuento(id,dtoDescuento);
+      return await this.productsService.aplicarDescuento(id,dtoDescuento);
    }
     @Patch('categoria/:id')
         async asignaCateoria(
@@ -83,7 +83,7 @@ export class ProductsController {
             throw new ForbiddenException('Solo los administradores pueden asignar una categoria')
           }
           
-          return this.productsService.asignarCategoria(id,dtoCategoria);
+          return await this.productsService.asignarCategoria(id,dtoCategoria);
    }
    @Get('categoria/:category')
    async listaProductoPorCategoria(@Param('category') category : string){
@@ -96,12 +96,20 @@ export class ProductsController {
      if(isNaN(price)){
       throw new BadRequestException('Debe de ser un numero')
      }
-      return this.productsService.filtrarPorRangoDePrecioMax(price)
+      return await this.productsService.filtrarPorRangoDePrecioMax(price)
    }
 
   @Get('/stock/:id')
   async disponibilidadProducto(@Param('id') id: string){
     return await this.productsService.verificarDisponibilidad(id)
+  }
+  @Get('/totalinvetario')
+  async totalInventario(){
+    //@User() user: any
+   /* if( user.role !== 'ADMIN'){
+       throw new ForbiddenException('Solo los administradores pueden ver el total de inventario')
+          }*/
+    return await this.productsService.valorTotalInventario()
   }
    
 }
