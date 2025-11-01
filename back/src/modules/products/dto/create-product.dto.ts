@@ -8,4 +8,5 @@ export class CreateProductDto {
   @IsNumber({ maxDecimalPlaces: 2 }) @Min(0) price: number;
   @IsString() description : string;
   @IsString() category : string;
+  @IsNumber() stock : number;
 }

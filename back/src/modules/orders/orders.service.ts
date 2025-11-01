@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { PrismaClient } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { Status } from '@prisma/client';
 
 @Injectable()
-export class OrdersService extends PrismaClient{
+export class OrdersService {
+  constructor(private readonly prisma: PrismaService) {}
+
  async create(createOrderDto: CreateOrderDto) {
-    return this.orders.create({
+    return this.prisma.orders.create({
       data : {
         id_order: createOrderDto.id_order,
         status: createOrderDto.status,
@@ -18,11 +21,11 @@ export class OrdersService extends PrismaClient{
   }
 
   async findAll() {
-    return this.orders.findMany();
+    return this.prisma.orders.findMany();
   }
 
   async findOne(id: string) {
-    return this.orders.findUnique({
+    return this.prisma.orders.findUnique({
       where:{
         id_order:id
       }
@@ -30,7 +33,7 @@ export class OrdersService extends PrismaClient{
   }
 
   async update(id: string, updateOrderDto: UpdateOrderDto) {
-    return this.orders.update({
+    return this.prisma.orders.update({
       where:{
         id_order:id
       },
@@ -41,10 +44,21 @@ export class OrdersService extends PrismaClient{
   }
 
   async remove(id: string) {
-    return this.orders.delete({
+    return this.prisma.orders.delete({
       where:{
         id_order:id
       }
     }) ;
   }
+  // AGREGO MAS FUNCIONES PARA LAS ORDENES
+  async totalOrden(){}
+  async calcularImpuestos(id_order){}
+  async calcularCostoEnvio(id_order){}
+  async cambiarEstado(id_order, nuevoEstado:Status){}
+  async cancelarOrden(id_order){}
+  async filtrarOrdenesPorFecha(desde, hasta){}
+  async marcarComoPagada(id_order, metodoPago) {}
+  async actualizarCantidad(id_order, id_producto, nuevaCantidad: number){}
+  async ordenesPendientes() {}
+  async ordenesCompletadas(){}
 }
