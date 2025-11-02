@@ -1,16 +1,51 @@
-import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsOptional,
+  IsString,
+  IsStrongPassword,
+} from 'class-validator';
 
 export class UpdateUserDto {
+  @ApiPropertyOptional({
+    example: 'Juan',
+    description: 'Updated first name of the user (optional)',
+  })
   @IsString()
-  name: string;
+  @IsOptional()
+  name?: string;
+
+  @ApiPropertyOptional({
+    example: 'Perez',
+    description: 'Updated last name of the user (optional)',
+  })
   @IsString()
-  lastName: string;
+  @IsOptional()
+  lastName?: string;
+
+  @ApiPropertyOptional({
+    example: 'jperez',
+    description: 'Updated username for login (optional)',
+  })
   @IsString()
-  username: string;
+  @IsOptional()
+  username?: string;
+
+  @ApiPropertyOptional({
+    example: 'j.perez@example.com',
+    description: 'Updated email address of the user (optional)',
+  })
   @IsString()
   @IsEmail()
-  email: string;
+  @IsOptional()
+  email?: string;
+
+  @ApiPropertyOptional({
+    example: 'StrongP@ssw0rd!',
+    description: 'Updated password (must be strong, optional)',
+  })
   @IsString()
   @IsStrongPassword()
-  password: string;
+  @IsOptional()
+  password?: string;
 }

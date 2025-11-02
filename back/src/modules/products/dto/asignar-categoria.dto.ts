@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-export class AsignarCategoriaDto{
-    @IsNotEmpty()
-    @IsString()
-    category: string;
+export class AsignarCategoriaDto {
+  @IsNotEmpty()
+  @IsString()
+  category: string;
 }
