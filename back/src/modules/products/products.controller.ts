@@ -18,7 +18,6 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { AplicarDescuentoDto } from './dto/aplicar-descuento.dto';
 import { User } from '../common/decorators/user.decorator';
-import { CurrentUser } from '../common/interfaces/current-user.interface';
 import { AsignarCategoriaDto } from './dto/asignar-categoria.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 @ApiBearerAuth()

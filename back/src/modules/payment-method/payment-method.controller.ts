@@ -8,12 +8,15 @@ import {
   Delete,
   ConflictException,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { PaymentMethodService } from './payment-method.service';
 import { CreatePaymentMethodDto } from './dto/create-payment-method.dto';
 import { UpdatePaymentMethodDto } from './dto/update-payment-method.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '../common/guards/auth.guard';
 @ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('payment-method')
 export class PaymentMethodController {
   constructor(private readonly paymentMethodService: PaymentMethodService) {}

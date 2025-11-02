@@ -19,6 +19,7 @@ import { Token } from '../common/decorators';
 import { JwtService } from '../common/jwt/jwt.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
 @ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('customers')
 export class CustomersController {
   constructor(
