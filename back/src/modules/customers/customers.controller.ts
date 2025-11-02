@@ -17,7 +17,8 @@ import { User } from '../common/decorators/user.decorator';
 import { CurrentUser } from '../common/interfaces/current-user.interface';
 import { Token } from '../common/decorators';
 import { JwtService } from '../common/jwt/jwt.service';
-
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth()
 @Controller('customers')
 export class CustomersController {
   constructor(
