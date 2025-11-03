@@ -1,0 +1,35 @@
+##############################
+# BUILD
+##############################
+FROM node:current-alpine3.22 AS build
+
+WORKDIR /usr/src/app
+
+COPY package.json package-lock.json ./
+
+RUN npm install --legacy-peer-deps
+RUN apk update && apk upgrade
+RUN apk add --no-cache openssl
+
+COPY . .
+ 
+RUN npx prisma generate
+
+RUN npm run build
+RUN npm prune --production --legacy-peer-deps
+
+##############################
+# PRODUCTION
+##############################
+FROM node:current-alpine3.22 AS production
+
+WORKDIR /usr/src/app
+ENV NODE_ENV=production
+
+RUN apk update && apk upgrade
+RUN apk add --no-cache openssl
+
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/dist ./dist
+
+CMD ["node", "dist/main.js"]
