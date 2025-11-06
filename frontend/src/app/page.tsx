@@ -6,6 +6,7 @@ import { ProductGrid } from "@/components/catalog/product-grid";
 import { products } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -40,19 +41,16 @@ export default function Home() {
                 vuelven.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  size="lg"
-                  className="bg-[var(--fd-color-primary)] hover:bg-[#6d32d7]"
-                >
-                  NEW IN
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-[var(--fd-color-border)] hover:border-[var(--fd-color-primary)]"
-                >
-                  Colección Spring 2025
-                </Button>
+                <Link href="/new-in">
+                  <Button size="lg" className="bg-[var(--fd-color-primary)] hover:bg-[#6d32d7]">
+                    NEW IN
+                  </Button>
+                </Link>
+                <Link href="/coleccion/spring-2025">
+                  <Button size="lg" variant="outline" className="border-[var(--fd-color-border)] hover:border-[var(--fd-color-primary)]">
+                    Colección Spring 2025
+                  </Button>
+                </Link>
               </div>
             </div>
           </Container>

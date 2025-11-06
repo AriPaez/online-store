@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  online-store:
+    container_name: online-store
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      target: production
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
+    networks:
+      - online-store-net
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:16
+    container_name: database-online-store
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: Dress
+      TZ: America/Argentina/Buenos_Aires
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # ports:
+    #   - "5432:5432"
+    networks:
+      - online-store-net
+    env_file:
+      - .env
+
+networks:
+  online-store-net:
+    external: true
+volumes:
+  postgres_data:

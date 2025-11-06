@@ -8,7 +8,7 @@ import { JwtService } from './jwt.service';
     NestJwtModule.register({
       global: true,
       secret: envs.jwtSecret,
-      signOptions: { expiresIn: '1y' },
+      signOptions: { expiresIn: '5m' }, //Expires in 5 minutes
     }),
   ],
   providers: [JwtService],
